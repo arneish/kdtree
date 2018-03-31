@@ -1,0 +1,8 @@
+1. execute run_executable.sh from bash [input file name is already specified in script, modify for other inputs]
+2. generator.cpp generates data points: i have tried 2 dimension only: please test with higher dim and size [comment out graphviz codes for higher dimensions]
+3. plot2d.py plots the graph for 2 dimension case only...i have used graphviz...use run_install.sh for installing it and executing code
+4. min max is there in Node in kdtree.h ...stores min max across all dimensions
+5. median finding is quicksearch algorithm...can be made slightly faster ..will do if needed 
+
+arneish 
+31.03
