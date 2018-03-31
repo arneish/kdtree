@@ -17,7 +17,7 @@ class Node
     vector<double> max;
 
   public:
-    Node(int split_dim, vector<int> &list, int pivot, double median, vector<double>&min, vector<double>&max)
+    Node(int split_dim, vector<int> &list, int pivot, double median, vector<double> const &min, vector<double>const &max)
     {
         //this->ID = ID;
         this->split_dim = split_dim;
@@ -36,9 +36,9 @@ class Node
     }
 };
 
-int findmedian(vector<int>, vector<vector<double>>, int, int);
+int findmedian(vector<int>, vector<vector<double>> const &, int, int);
 
-Node *kdconstruct(vector<int> &, vector<vector<double>>, int, int &);
+Node *kdconstruct(vector<int> &, vector<vector<double>> const &, int, int &, int &);
 
 //graphvizNode only for plot purposes
 class graphvizNode
@@ -61,4 +61,4 @@ class graphvizNode
 };
 
 //kdtree traversal for constructing graphviz plot
-void traverse(Node *root, vector<vector<double>> data, vector<graphvizNode *> &v, int &counter);
+void traverse(Node *root, vector<vector<double>> const &data, vector<graphvizNode *> &v, int &counter);

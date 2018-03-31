@@ -11,7 +11,7 @@ using namespace std;
 //kd-tree construction algorithms
 
 //find median along dimension dim: [using quicksearch]
-int findmedian(vector<int> s, vector< vector <double> > data, int dim, int k)
+int findmedian(vector<int> s, vector< vector <double> > const &data, int dim, int k)
 {
     int cursize = s.size();
     int median_index = (cursize + 1) / 2;
@@ -45,10 +45,12 @@ int findmedian(vector<int> s, vector< vector <double> > data, int dim, int k)
         return findmedian(right, data, dim, k-(left.size()+1));
 }
 
-Node* kdconstruct(vector<int> &list, vector< vector <double> > data, int depth, int &dim)
+Node* kdconstruct(vector<int> &list, vector< vector <double> > const &data, int depth, int &dim, int &tracker)
 { 
     if (list.size()==0)
         return nullptr;
+
+    cout<<++tracker<<endl;
     int axis = depth % dim; //choose axis (dimension) to be split along
     
     int pivot = findmedian (list, data, axis, (list.size()+1)/2); //splitting index at axis
@@ -81,12 +83,12 @@ Node* kdconstruct(vector<int> &list, vector< vector <double> > data, int depth, 
     }
     cout<<"leftindex size/rightindex size/list size:"<<leftindex.size()<<"/"<<rightindex.size()<<"/"<<list.size()<<endl;
     assert (leftindex.size()+rightindex.size()+1 == list.size());
-    n->lchd = kdconstruct(leftindex, data, depth+1, dim);
-    n->rchd = kdconstruct(rightindex, data, depth+1, dim);
+    n->lchd = kdconstruct(leftindex, data, depth+1, dim, tracker);
+    n->rchd = kdconstruct(rightindex, data, depth+1, dim, tracker);
     return n; 
 }
 
-void traverse(Node* root, vector<vector<double>>data, vector<graphvizNode*> &v, int &counter){
+void traverse(Node* root, vector<vector<double>> const &data, vector<graphvizNode*> &v, int &counter){
     int curID = counter;
     ostringstream strs, strs2;
     double x = data[root->pivot][0];
