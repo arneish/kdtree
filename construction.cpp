@@ -10,10 +10,31 @@ using namespace std;
 
 //kd-tree construction algorithms
 
-//find median along dimension dim: [using quicksearch]
-int findmedian(vector<int> s, vector< vector <double> > const &data, int dim, int k)
+//comparator for size<25 sorting
+typedef pair<double, int> mypair;
+
+
+bool comparator(const mypair &l, const mypair &r)
 {
+    return l.first < r.first;
+}
+
+
+//find median along dimension dim: [using quicksearch]
+int findmedian(vector<int> s, vector<vector<double>> const &data, int dim, int k)
+{
+    //NOTE: argument 'k' starts from 1 not 0: (find "kth" largest point)
     int cursize = s.size();
+    if (cursize < 20)
+    {
+        vector<mypair> temp;
+        for (auto&i: s)
+        {
+            temp.push_back(make_pair(data[i][dim],i));
+        }
+        sort(temp.begin(),temp.end(), comparator);
+        return temp[k-1].second;
+    }
     int median_index = (cursize + 1) / 2;
     //cout << "size of the vector is:"<<cursize<<"  ";
     int pivot_index = rand() % (cursize); // [0, cursize-1]
@@ -41,18 +62,18 @@ int findmedian(vector<int> s, vector< vector <double> > const &data, int dim, in
         return pivot;
     else if (left.size() > k-1)
         return findmedian(left, data, dim, k);
-    else 
+    else
         return findmedian(right, data, dim, k-(left.size()+1));
 }
 
 Node* kdconstruct(vector<int> &list, vector< vector <double> > const &data, int depth, int &dim, int &tracker)
-{ 
+{
     if (list.size()==0)
         return nullptr;
 
     cout<<++tracker<<endl;
     int axis = depth % dim; //choose axis (dimension) to be split along
-    
+
     int pivot = findmedian (list, data, axis, (list.size()+1)/2); //splitting index at axis
     double median = data[pivot][axis];
     vector<double>minvec;
@@ -71,7 +92,7 @@ Node* kdconstruct(vector<int> &list, vector< vector <double> > const &data, int 
         maxvec.push_back(max);
     }
     Node *n = new Node(axis, list, pivot, median, minvec, maxvec);
-    cout<<"axis:"<<axis<<", pivot:"<<pivot<<", median:"<<median<<endl;
+    cout<<"axis:"<<axis<<endl;//<<", pivot:"<<pivot<<", median:"<<median<<endl;
     vector<int> leftindex;
     vector<int> rightindex;
     for (auto&i: list)
@@ -81,11 +102,11 @@ Node* kdconstruct(vector<int> &list, vector< vector <double> > const &data, int 
         else if (i!=pivot)
             rightindex.push_back(i);
     }
-    cout<<"leftindex size/rightindex size/list size:"<<leftindex.size()<<"/"<<rightindex.size()<<"/"<<list.size()<<endl;
+    //cout<<"leftindex size/rightindex size/list size:"<<leftindex.size()<<"/"<<rightindex.size()<<"/"<<list.size()<<endl;
     assert (leftindex.size()+rightindex.size()+1 == list.size());
     n->lchd = kdconstruct(leftindex, data, depth+1, dim, tracker);
     n->rchd = kdconstruct(rightindex, data, depth+1, dim, tracker);
-    return n; 
+    return n;
 }
 
 void traverse(Node* root, vector<vector<double>> const &data, vector<graphvizNode*> &v, int &counter){
@@ -107,6 +128,6 @@ void traverse(Node* root, vector<vector<double>> const &data, vector<graphvizNod
         traverse(root->rchd, data, v, ++counter);
     }
     graphvizNode* gv = new graphvizNode(curID, s, adjlist);
-    v.push_back(gv);    
+    v.push_back(gv);
     return;
 }

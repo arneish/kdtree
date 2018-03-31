@@ -49,7 +49,7 @@ while (getline(inFile, s))
 // for (int i=0; i<size; i++)
 //     {for (int j=0; j<dim; j++)
 //         cout<<data[i][j]<<" ";
-//         cout<<endl;    
+//         cout<<endl;
 //     }
 int tracker = 0;
 Node *root = kdconstruct(masterlist, data, 0, dim, tracker);
@@ -58,7 +58,7 @@ cout<<"root: median "<<root->lchd->median<<" :"<<root->lchd->list.size();
 
 
 duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-cout<<"duration (min): "<< duration/60.0 <<'\n';
+cout<<"duration (sec): "<< duration <<"sec \n";
 
 vector<graphvizNode*> gv;
 int starter=0;
@@ -67,8 +67,8 @@ cout<<endl<<"gv size:"<<gv.size();
 
 
 ofstream file, edge;
-file.open(argv[1]+"plotdata.txt");
-edge.open(argv[1]+"plotedges.txt");
+file.open("plotdata.txt");
+edge.open("plotedges.txt");
 for (auto&i: gv){
     file<<"'"<<i->ID<<"'"<<"; "<<"'"<<i->display<<"'; \n";
 }
